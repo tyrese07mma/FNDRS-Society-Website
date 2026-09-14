@@ -183,10 +183,14 @@ fully without scripting, so what remains is the no-JS presentation plus a
 router, the product-tour tabs and an offline notice on the form, all written in
 `scripts/build-single-file.mjs`.
 
-Two deliberate trade-offs: the Latin-Extended font faces are dropped (no lazy
-loading exists in a single file, and the copy never needs them), and the
-mobile menu is replaced by the inline navigation the no-JS layout already
-provides.
+The behaviour Next's runtime provided is reimplemented in plain JS so the file
+behaves like the real site rather than dropping to the no-script layout:
+routing, the mobile menu, the header's scroll state, the scroll reveals and
+the product-tour tabs. The reveals carry a timeout fallback, so a failure
+there can never leave content invisible.
+
+One deliberate trade-off: the Latin-Extended font faces are dropped, since a
+single file has no lazy loading to save them and the copy never needs them.
 
 ## Analytics
 

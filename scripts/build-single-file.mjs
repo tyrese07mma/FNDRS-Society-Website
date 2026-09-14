@@ -4,15 +4,16 @@
  *   npm run build:static && npm run build:single
  *
  * Every page, the stylesheet, the fonts and the app screenshots end up inside
- * a single file with no external references — droppable into iCloud Drive,
- * emailed, opened from disk, or deployed to a static host on its own.
+ * a single file with no external references — droppable into a phone's file
+ * manager, emailed, opened from disk, or deployed on its own.
  *
  * Next's own JavaScript is removed: its router fetches payloads over HTTP and
- * cannot work from a lone file. The site was built to render fully without
- * scripting, so what remains is the no-JS presentation plus a small router and
- * tab handler written here.
+ * cannot work from a lone file. The behaviour it provided is reimplemented
+ * here in plain JS — routing, the mobile menu, the header's scroll state, the
+ * scroll reveals and the product-tour tabs — so the file behaves like the real
+ * site rather than falling back to the no-script layout.
  */
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -54,7 +55,6 @@ let css = readFileSync(join(outDir, "_next", "static", "chunks", cssFile), "utf8
 // The Latin-Extended faces exist for characters this site never renders. In a
 // single file there is no lazy loading to save them, so they are dropped along
 // with their now-dangling family names in the font stacks.
-css = css.replace(/@font-face\{[^}]*Inter(?:\s|%20)?(?:Tight\s)?Ext[^}]*\}/g, "");
 css = css.replace(/@font-face\s*\{[^}]*url\(\/fonts\/[^)]*\)[^}]*\}/g, "");
 css = css.replace(/,\s*"Inter Tight Ext"/g, "").replace(/,\s*"Inter Ext"/g, "");
 
@@ -85,19 +85,15 @@ ROUTES.forEach((route, index) => {
   // pointing at the field beside it rather than one on another page.
   const prefix = `r${index}-`;
   body = body.replace(/\b(id|for|aria-controls|aria-labelledby|aria-describedby)="([^"]+)"/g, (m, attr, value) => {
-    const scoped = value
-      .split(/\s+/)
-      .map((v) => prefix + v)
-      .join(" ");
+    const scoped = value.split(/\s+/).map((v) => prefix + v).join(" ");
     return `${attr}="${scoped}"`;
   });
   body = body.replace(/href="#(?!\/)([^"]+)"/g, `href="#${prefix}$1"`);
 
   // Internal navigation becomes hash routing inside this one document.
-  body = body.replace(/href="(\/[^"#]*)"/g, (m, href) => {
-    const known = ROUTES.some((r) => r.path === href);
-    return known ? `href="#${href}"` : m;
-  });
+  body = body.replace(/href="(\/[^"#]*)"/g, (m, href) =>
+    ROUTES.some((r) => r.path === href) ? `href="#${href}"` : m,
+  );
 
   // Screenshots are referenced up to eight times per page and repeat across
   // pages. Each one is embedded once and applied by the boot script.
@@ -113,45 +109,112 @@ ROUTES.forEach((route, index) => {
   );
 });
 
-// ── Document ────────────────────────────────────────────────────────────────
-const icon = dataUri(join("_next", "static", "media", readdirSync(join(outDir, "_next", "static", "media")).find((f) => f.endsWith(".svg"))), "image/svg+xml");
+const iconFile = readdirSync(join(outDir, "_next", "static", "media")).find((f) => f.endsWith(".svg"));
+const icon = dataUri(join("_next", "static", "media", iconFile), "image/svg+xml");
 
-const html = `<!doctype html>
-<html lang="en" class="${htmlClass}">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FNDRS Society — Find what's missing</title>
-<meta name="description" content="A matching platform for founders and builders. Find a co-founder, the skill your team is missing, or a project worth joining." />
-<meta name="robots" content="noindex, nofollow" />
-<meta name="theme-color" content="#08080a" />
-<meta name="color-scheme" content="dark" />
-<link rel="icon" href="${icon}" />
-<style>${css}</style>
-<style>
-  /* Only the active route is in flow; the rest stay parsed but out of the way. */
-  .route[hidden] { display: none !important; }
-</style>
-</head>
-<body class="${bodyClass}">
-${routeMarkup.join("\n")}
-<script>
+const boot = `
 (function () {
   var IMAGES = ${JSON.stringify(Object.fromEntries(imageMap))};
 
-  // Embedded screenshots, applied once at boot.
-  var pending = document.querySelectorAll("img[data-src]");
-  for (var i = 0; i < pending.length; i++) {
-    var src = IMAGES[pending[i].getAttribute("data-src")];
-    if (src) pending[i].src = src;
+  var ICON_MENU =
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 7h17"></path><path d="M3.5 12h17"></path><path d="M3.5 17h17"></path></svg>';
+  var ICON_CLOSE =
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>';
+
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+  // ── Embedded screenshots ──────────────────────────────────────────────────
+  each(document.querySelectorAll("img[data-src]"), function (img) {
+    var src = IMAGES[img.getAttribute("data-src")];
+    if (src) img.src = src;
+  });
+
+  // ── Scroll reveals ────────────────────────────────────────────────────────
+  // The stylesheet hides these while the \`js\` class is present, so if anything
+  // here fails the content must still end up visible.
+  function revealAll() {
+    each(document.querySelectorAll("[data-reveal]"), function (el) { el.dataset.reveal = "shown"; });
   }
 
+  try {
+    if (typeof IntersectionObserver === "undefined") {
+      revealAll();
+    } else {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          each(entries, function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.dataset.reveal = "shown";
+            observer.unobserve(entry.target);
+          });
+        },
+        { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+      );
+      each(document.querySelectorAll("[data-reveal]"), function (el) { observer.observe(el); });
+      // A hidden route's elements never intersect, so they wait here until the
+      // router shows them — but nothing may stay invisible indefinitely.
+      setTimeout(function () {
+        each(document.querySelectorAll(".route:not([hidden]) [data-reveal]"), function (el) {
+          if (el.dataset.reveal !== "shown") el.dataset.reveal = "shown";
+        });
+      }, 2500);
+    }
+  } catch (e) {
+    revealAll();
+  }
+
+  // ── Header: scroll state and mobile menu ──────────────────────────────────
+  var closers = [];
+
+  each(document.querySelectorAll(".route"), function (route) {
+    var shell = route.querySelector("[data-site-header]");
+    if (!shell) return;
+    var toggle = route.querySelector("[data-menu-toggle]");
+    var panel = toggle ? document.getElementById(toggle.getAttribute("aria-controls")) : null;
+
+    function paint() {
+      var solid = window.scrollY > 12 || (panel && !panel.hidden);
+      shell.classList.toggle("border-transparent", !solid);
+      shell.classList.toggle("bg-transparent", !solid);
+      shell.classList.toggle("border-line", !!solid);
+      shell.classList.toggle("bg-ink/88", !!solid);
+      shell.classList.toggle("backdrop-blur-xl", !!solid);
+    }
+
+    window.addEventListener("scroll", paint, { passive: true });
+    paint();
+
+    if (!toggle || !panel) return;
+
+    function setOpen(open) {
+      panel.hidden = !open;
+      document.body.style.overflow = open ? "hidden" : "";
+      toggle.innerHTML = open ? ICON_CLOSE : ICON_MENU;
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      toggle.setAttribute("aria-expanded", String(open));
+      paint();
+    }
+
+    toggle.addEventListener("click", function () { setOpen(panel.hidden); });
+    panel.addEventListener("click", function (event) {
+      if (event.target.closest && event.target.closest("a")) setOpen(false);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !panel.hidden) { setOpen(false); toggle.focus(); }
+    });
+
+    closers.push(function () { setOpen(false); });
+  });
+
+  // ── Routing ───────────────────────────────────────────────────────────────
   var routes = Array.prototype.slice.call(document.querySelectorAll(".route"));
 
   function show(path) {
     var match = routes.filter(function (r) { return r.dataset.route === path; })[0] || routes[0];
     routes.forEach(function (r) { r.hidden = r !== match; });
     document.title = match.dataset.title;
+    closers.forEach(function (close) { close(); });
+    document.body.style.overflow = "";
     window.scrollTo(0, 0);
   }
 
@@ -163,7 +226,7 @@ ${routeMarkup.join("\n")}
   window.addEventListener("hashchange", fromHash);
   fromHash();
 
-  // In-page anchors still have to scroll rather than switch route.
+  // In-page anchors scroll rather than switch route.
   document.addEventListener("click", function (event) {
     var link = event.target.closest && event.target.closest('a[href^="#"]');
     if (!link) return;
@@ -176,11 +239,11 @@ ${routeMarkup.join("\n")}
     }
   });
 
-  // The product tour is a React component in the real site. Its markup is
-  // already here, so this restores just the tab switching.
-  document.querySelectorAll('[role="tablist"]').forEach(function (list) {
+  // ── Product tour tabs ─────────────────────────────────────────────────────
+  each(document.querySelectorAll('[role="tablist"]'), function (list) {
     var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
-    var panel = document.getElementById(tabs[0] && tabs[0].getAttribute("aria-controls"));
+    if (!tabs.length) return;
+    var panel = document.getElementById(tabs[0].getAttribute("aria-controls"));
     if (!panel) return;
     var frames = Array.prototype.slice.call(panel.querySelectorAll(".absolute.inset-0"));
 
@@ -215,28 +278,54 @@ ${routeMarkup.join("\n")}
     });
   });
 
-  // The waitlist has no endpoint in a single file; say so instead of failing.
-  document.querySelectorAll("form").forEach(function (form) {
+  // ── Waitlist ──────────────────────────────────────────────────────────────
+  each(document.querySelectorAll("form"), function (form) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       var note = form.querySelector("[data-offline-note]");
       if (!note) {
         note = document.createElement("p");
         note.setAttribute("data-offline-note", "");
-        note.className = "mt-4 rounded-[1.25rem] border border-gold/30 bg-gold-deep/40 p-4 text-[0.875rem] leading-relaxed text-gold-light";
         note.setAttribute("role", "status");
+        note.className =
+          "mt-4 rounded-[1.25rem] border border-gold/30 bg-gold-deep/40 p-4 text-[0.875rem] leading-relaxed text-gold-light";
         form.appendChild(note);
       }
-      note.textContent = "This is a standalone preview file — signups need the live site.";
+      note.textContent = "This is a standalone preview file \\u2014 signups need the live site.";
     });
   });
 })();
+`;
+
+const html = `<!doctype html>
+<html lang="en" class="${htmlClass}">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>FNDRS Society — Find what's missing</title>
+<meta name="description" content="A matching platform for founders and builders. Find a co-founder, the skill your team is missing, or a project worth joining." />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#08080a" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="${icon}" />
+<style>${css}</style>
+<style>
+  /* Only the active route is in flow; the rest stay parsed but out of the way. */
+  .route[hidden] { display: none !important; }
+</style>
+<script>
+  /* Runs before the body paints, so the site takes its scripted layout —
+     mobile menu and scroll reveals — instead of the no-script fallback. */
+  document.documentElement.className += " js";
 </script>
+</head>
+<body class="${bodyClass}">
+${routeMarkup.join("\n")}
+<script>${boot}</script>
 </body>
 </html>
 `;
 
-import { mkdirSync } from "node:fs";
 mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(target, html);
 
