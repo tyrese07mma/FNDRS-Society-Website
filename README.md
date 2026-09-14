@@ -34,11 +34,12 @@ npm run dev                  # http://localhost:3000
 Useful scripts:
 
 ```bash
-npm run build      # production build
-npm run start      # serve the production build
-npm run typecheck  # tsc --noEmit
-npm run lint       # eslint
-npm run check      # typecheck + lint + build
+npm run build         # production build (server, with the waitlist API)
+npm run start         # serve the production build
+npm run build:static  # static export to out/ — see "Static deployment" below
+npm run typecheck     # tsc --noEmit
+npm run lint          # eslint
+npm run check         # typecheck + lint + build
 ```
 
 ## Routes
@@ -127,6 +128,41 @@ in `src/lib/waitlist.ts`:
 With neither set, the endpoint returns `503 not_configured` and the form says
 signups are not open yet. That is deliberate: it never pretends to have stored
 an address it discarded.
+
+## Static deployment
+
+`npm run build:static` writes a plain folder of files to `out/` that any static
+host will serve — Netlify drag-and-drop, S3, GitHub Pages, nginx:
+
+```bash
+npm run build:static                        # private preview, not indexable
+NEXT_PUBLIC_NOINDEX=0 npm run build:static  # public deployment
+```
+
+Drag `out/` (or a zip of its contents) onto [app.netlify.com/drop](https://app.netlify.com/drop).
+
+Three things differ from the server build, all handled by the script:
+
+- **No `/api/waitlist`.** A static host runs no server code, and Next refuses to
+  export a dynamic route handler at all, so `scripts/build-static.mjs` moves
+  `src/app/api` aside for the build and restores it afterwards — including when
+  the build fails or is interrupted. The form detects the missing endpoint and
+  shows its "signups aren't connected yet" state rather than a generic error.
+- **No `headers()`.** That config only applies to a server, so the script writes
+  an equivalent Netlify `_headers` file into `out/` with the same security and
+  caching rules.
+- **No image optimizer.** `images.unoptimized` is set for this build. The
+  screenshots are already exported at their display size, so nothing changes
+  visually.
+
+`NEXT_PUBLIC_NOINDEX` defaults to on for this script, which sets
+`noindex, nofollow` and a blanket `Disallow: /` in robots.txt. Keep it on for
+preview URLs so they never compete with the real domain; set it to `0` for the
+production deployment. The script prints which mode it used.
+
+To make the waitlist work on a static host, point `WAITLIST_WEBHOOK_URL` at a
+form service, or run the site on a platform that supports Next.js route
+handlers (Netlify's Next runtime, Vercel, a Node server).
 
 ## Analytics
 

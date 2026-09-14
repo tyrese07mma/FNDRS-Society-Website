@@ -3,6 +3,9 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/lib/site";
 
+// Rendered once at build time so a static export can emit it as a PNG file.
+export const dynamic = "force-static";
+
 export const alt = "FNDRS Society — Find what's missing.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

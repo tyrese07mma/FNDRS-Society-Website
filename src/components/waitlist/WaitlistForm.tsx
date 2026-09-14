@@ -73,7 +73,11 @@ export function WaitlistForm({
         return;
       }
 
-      if (body.code === "not_configured") {
+      // A static export has no /api route at all, and a half-configured host
+      // may answer 501. Both mean the same thing to a visitor as an explicit
+      // not_configured: the waitlist is not wired up, not that they did
+      // something wrong.
+      if (body.code === "not_configured" || [404, 405, 501, 503].includes(response.status)) {
         setStatus("not_configured");
         return;
       }

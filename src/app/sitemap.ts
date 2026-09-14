@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 
+// Evaluated once per build so the route can also be emitted by a static export.
+export const dynamic = "force-static";
+
 const routes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/features", priority: 0.9, changeFrequency: "monthly" },

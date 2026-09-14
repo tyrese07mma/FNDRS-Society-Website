@@ -26,6 +26,15 @@ export const siteConfig = {
 
 export const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "";
 
+/**
+ * Keeps a deployment out of search results. Set for preview and staging URLs
+ * so they never compete with — or leak ahead of — the real site. It flips both
+ * the robots meta tag and robots.txt.
+ */
+export const noIndex = ["1", "true", "yes"].includes(
+  (process.env.NEXT_PUBLIC_NOINDEX ?? "").trim().toLowerCase(),
+);
+
 export type NavItem = { label: string; href: string; description?: string };
 
 export const primaryNav: NavItem[] = [

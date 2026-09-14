@@ -3,7 +3,7 @@ import { Analytics } from "@/components/analytics/Analytics";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { inter, interTight } from "@/lib/fonts";
-import { seoKeywords, siteConfig } from "@/lib/site";
+import { noIndex, seoKeywords, siteConfig } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — Find what's missing`,
     description: siteConfig.shortDescription,
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  },
+  robots: noIndex
+    ? { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } }
+    : {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+      },
   category: "technology",
   formatDetection: { telephone: false },
 };

@@ -26,3 +26,7 @@ yarn-error.log*
 # env
 .env
 .env*.local
+
+# static export output
+/out/
+/.api-stash/
