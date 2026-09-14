@@ -37,6 +37,7 @@ Useful scripts:
 npm run build         # production build (server, with the waitlist API)
 npm run start         # serve the production build
 npm run build:static  # static export to out/ — see "Static deployment" below
+npm run build:single  # bundle out/ into one self-contained dist/index.html
 npm run typecheck     # tsc --noEmit
 npm run lint          # eslint
 npm run check         # typecheck + lint + build
@@ -163,6 +164,29 @@ production deployment. The script prints which mode it used.
 To make the waitlist work on a static host, point `WAITLIST_WEBHOOK_URL` at a
 form service, or run the site on a platform that supports Next.js route
 handlers (Netlify's Next runtime, Vercel, a Node server).
+
+### One-file build
+
+```bash
+npm run build:static && npm run build:single
+```
+
+Bundles the whole export into a single `dist/index.html` (~0.7 MB) with the
+stylesheet, both fonts and all five screenshots embedded as data URIs — zero
+external requests. Useful for sending the site to someone, opening it from a
+phone's file manager, or a one-file deploy.
+
+All nine pages live in that file as sections; a small router swaps them on
+`#/about`-style hashes. Next's own JavaScript is removed, because its router
+fetches payloads over HTTP and cannot work from a lone file. The site renders
+fully without scripting, so what remains is the no-JS presentation plus a
+router, the product-tour tabs and an offline notice on the form, all written in
+`scripts/build-single-file.mjs`.
+
+Two deliberate trade-offs: the Latin-Extended font faces are dropped (no lazy
+loading exists in a single file, and the copy never needs them), and the
+mobile menu is replaced by the inline navigation the no-JS layout already
+provides.
 
 ## Analytics
 
