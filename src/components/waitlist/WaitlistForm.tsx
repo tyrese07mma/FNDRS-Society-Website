@@ -103,12 +103,12 @@ export function WaitlistForm({
           <Icon name="check" size={20} strokeWidth={2} />
         </span>
         <h3 className="mt-5 text-[1.5rem]">
-          {status === "duplicate" ? "You're already in." : "You're in."}
+          {status === "duplicate" ? "You’re already in." : "You’re in."}
         </h3>
         <p className="mt-2 max-w-md text-[0.9375rem] leading-relaxed text-cream/75">
           {status === "duplicate"
-            ? "This address is already on the list — no need to sign up twice. We'll be in touch when your spot opens."
-            : "We'll email you when your spot is ready. Access goes out in batches, so the network stays balanced across skills and regions."}
+            ? "This address is already on the list — no need to sign up twice. We’ll be in touch when your spot opens."
+            : "We’ll email you when your spot is ready. Access goes out in batches, so the network stays balanced across skills and regions."}
         </p>
       </div>
     );

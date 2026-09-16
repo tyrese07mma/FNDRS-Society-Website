@@ -26,9 +26,10 @@ export default function FaqPage() {
   return (
     <>
       <PageHero
+        index="/faq"
         eyebrow="FAQ"
         title={<>Questions, answered plainly</>}
-        lead="If something isn't covered here, it probably means we haven't decided yet — and we'd rather say that than guess."
+        lead="If something isn’t covered here, it probably means we haven’t decided yet — and we’d rather say that than guess."
       />
 
       <Section spacing="tight">

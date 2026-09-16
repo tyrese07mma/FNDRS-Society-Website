@@ -12,7 +12,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "From founder profile to co-founder in five steps: say what you're building, name what's missing, get matched, connect and build.",
+    "From founder profile to co-founder in five steps: say what you’re building, name what’s missing, get matched, connect and build.",
   alternates: { canonical: "/how-it-works" },
 };
 
@@ -25,17 +25,17 @@ const signals = [
   {
     icon: "sparkles" as const,
     title: "Skills and gaps",
-    body: "What you bring and what you're missing are separate fields — so a match can be strong precisely because you're different.",
+    body: "What you bring and what you’re missing are separate fields — so a match can be strong precisely because you’re different.",
   },
   {
     icon: "compass" as const,
     title: "Focus",
-    body: "The space you're building in, and the spaces you want to work in next.",
+    body: "The space you’re building in, and the spaces you want to work in next.",
   },
   {
     icon: "globe" as const,
     title: "Location and mode",
-    body: "City, timezone, and whether you're looking for someone in the room or online.",
+    body: "City, timezone, and whether you’re looking for someone in the room or online.",
   },
 ];
 
@@ -47,8 +47,8 @@ const howToSchema = {
     "Build a founder profile, state what you are missing, review ranked matches, start a conversation and build together.",
   totalTime: "PT10M",
   step: [
-    { "@type": "HowToStep", name: "Build your profile", text: "Add what you're building, what you're good at and where you are." },
-    { "@type": "HowToStep", name: "Name what's missing", text: "State the co-founder, skill, role or problem you're looking for." },
+    { "@type": "HowToStep", name: "Build your profile", text: "Add what you’re building, what you’re good at and where you are." },
+    { "@type": "HowToStep", name: "Name what’s missing", text: "State the co-founder, skill, role or problem you’re looking for." },
     { "@type": "HowToStep", name: "Get matched", text: "Smart Match scores people against your stage, skills, intent and location." },
     { "@type": "HowToStep", name: "Connect", text: "Skip, save or message the people worth a conversation." },
     { "@type": "HowToStep", name: "Build", text: "Turn a match into a co-founder, a first hire or a solved problem." },
@@ -59,18 +59,20 @@ export default function HowItWorksPage() {
   return (
     <>
       <PageHero
+        index="/how-it-works"
         eyebrow="How it works"
         title={<>From a profile to a co-founder</>}
         lead={`No introductions to chase and no gatekeeping. ${siteConfig.shortName} turns "I need someone who can do X" into a shortlist of people who can.`}
       />
 
-      <HowItWorks withCta={false} />
+      <HowItWorks withCta={false} index="01" />
 
       <Section id="signals" className="border-y border-line bg-band">
         <SectionHeading
+          index="02"
           eyebrow="What matching reads"
           title="Four signals, weighted against each other"
-          lead="Match scores aren't a popularity ranking. They compare what two people are trying to do and how well one fills the other's gap."
+          lead="Match scores aren’t a popularity ranking. They compare what two people are trying to do and how well one fills the other’s gap."
         />
         <div className="mt-14 grid gap-4 sm:grid-cols-2">
           {signals.map((signal, index) => (
@@ -91,7 +93,7 @@ export default function HowItWorksPage() {
         </Reveal>
       </Section>
 
-      <ProductPreview />
+      <ProductPreview index="03" />
 
       <CtaBand
         title="Ideas need the right people."

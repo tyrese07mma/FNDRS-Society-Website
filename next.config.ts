@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/opengraph-image": ["./src/fonts/og/**"],
     "/twitter-image": ["./src/fonts/og/**"],
+    "/about/opengraph-image": ["./src/fonts/og/**"],
+    "/about/twitter-image": ["./src/fonts/og/**"],
+    "/features/opengraph-image": ["./src/fonts/og/**"],
+    "/features/twitter-image": ["./src/fonts/og/**"],
+    "/how-it-works/opengraph-image": ["./src/fonts/og/**"],
+    "/how-it-works/twitter-image": ["./src/fonts/og/**"],
+    "/beta/opengraph-image": ["./src/fonts/og/**"],
+    "/beta/twitter-image": ["./src/fonts/og/**"],
+    "/faq/opengraph-image": ["./src/fonts/og/**"],
+    "/faq/twitter-image": ["./src/fonts/og/**"],
   },
   /*
    * Only applies to the server build — a static export has no server to send

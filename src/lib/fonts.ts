@@ -17,6 +17,14 @@ export const inter = localFont({
   fallback: ["Inter Ext", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
 });
 
+export const geistMono = localFont({
+  src: [{ path: "../fonts/GeistMono-latin.woff2", weight: "100 900", style: "normal" }],
+  variable: "--font-geist-mono",
+  display: "swap",
+  preload: true,
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+});
+
 export const interTight = localFont({
   src: [{ path: "../fonts/InterTight-latin.woff2", weight: "100 900", style: "normal" }],
   variable: "--font-inter-tight",

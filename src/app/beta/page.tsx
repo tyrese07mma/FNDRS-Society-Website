@@ -48,6 +48,7 @@ export default function BetaPage() {
   return (
     <>
       <PageHero
+        index="/beta"
         eyebrow="Early access"
         title={<>Get in before the network fills up</>}
         lead="FNDRS Society is in private beta. Spots go out in batches so every new member arrives to a network that already has people worth matching with."
@@ -93,7 +94,7 @@ export default function BetaPage() {
       </Section>
 
       <Section className="border-y border-line bg-band">
-        <SectionHeading eyebrow="Where we are" title="What happens between now and launch" />
+        <SectionHeading index="01" eyebrow="Where we are" title="What happens between now and launch" />
         <ol className="mt-12 grid gap-4 sm:grid-cols-3">
           {timeline.map((phase, index) => (
             <Reveal key={phase.label} as="li" delay={index * 80} className="block">
@@ -110,7 +111,7 @@ export default function BetaPage() {
       </Section>
 
       <Section>
-        <SectionHeading eyebrow="Before you sign up" title="The short version" />
+        <SectionHeading index="02" eyebrow="Before you sign up" title="The short version" />
         <div className="mt-12">
           <FaqAccordion items={faqs.filter((faq) => ["Is FNDRS free?", "Who can join?", "What stage is the product at?", "What happens after I request early access?"].includes(faq.question))} />
         </div>

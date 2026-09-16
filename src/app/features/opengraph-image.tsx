@@ -1,14 +1,14 @@
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = "FNDRS Society — Find what’s missing.";
+export const alt = "FNDRS Society — Everything is pointed at one outcome";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function OpengraphImage() {
   return renderOgImage({
-    eyebrow: "Private beta",
-    title: "Find what’s missing.",
-    subtitle: "Co-founders, skills, projects and the people who move an idea forward.",
+    eyebrow: "Product",
+    title: "Everything is pointed at one outcome",
+    subtitle: "Smart Match, profiles, opportunities, messaging and the FNDRS Copilot.",
   });
 }

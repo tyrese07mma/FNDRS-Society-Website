@@ -4,12 +4,12 @@ export const faqs: FaqItem[] = [
   {
     question: "What is FNDRS Society?",
     answer:
-      "A matching platform for founders and builders. Instead of browsing job titles, you say what you're building and what's missing — a co-founder, a skill, a project, a solution — and FNDRS puts the people who fit in front of you.",
+      "A matching platform for founders and builders. Instead of browsing job titles, you say what you’re building and what’s missing — a co-founder, a skill, a project, a solution — and FNDRS puts the people who fit in front of you.",
   },
   {
     question: "Who can join?",
     answer:
-      "Anyone building, or seriously preparing to. Founders, aspiring founders, engineers, designers, marketers, operators and domain experts. You don't need a registered company, funding, or a finished product.",
+      "Anyone building, or seriously preparing to. Founders, aspiring founders, engineers, designers, marketers, operators and domain experts. You don’t need a registered company, funding, or a finished product.",
   },
   {
     question: "Is FNDRS only for startup founders?",
@@ -19,7 +19,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Can I actually find a co-founder here?",
     answer:
-      "That's the primary use case. Smart Match scores people against your stage, the skills you bring, the ones you're missing, your focus area and your location, then shows you a ranked shortlist rather than a directory. You still do the deciding.",
+      "That’s the primary use case. Smart Match scores people against your stage, the skills you bring, the ones you’re missing, your focus area and your location, then shows you a ranked shortlist rather than a directory. You still do the deciding.",
   },
   {
     question: "How is this different from LinkedIn?",
@@ -34,12 +34,12 @@ export const faqs: FaqItem[] = [
   {
     question: "What stage is the product at?",
     answer:
-      "Private beta. The app is real and running: profiles, Smart Match, discovery, communities, events and messaging are built. We're deliberately growing the network slowly so early members find real matches instead of an empty feed.",
+      "Private beta. The app is real and running: profiles, Smart Match, discovery, communities, events and messaging are built. We’re deliberately growing the network slowly so early members find real matches instead of an empty feed.",
   },
   {
     question: "Will there be an iOS and Android app?",
     answer:
-      "FNDRS is built mobile-first and the beta already runs on mobile. Store availability is announced to the waitlist first — join it and you'll hear before it's public.",
+      "FNDRS is built mobile-first and the beta already runs on mobile. Store availability is announced to the waitlist first — join it and you’ll hear before it’s public.",
   },
   {
     question: "What happens after I request early access?",

@@ -1,14 +1,14 @@
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgImage } from "@/lib/og";
 
 export const dynamic = "force-static";
-export const alt = "FNDRS Society — Find what’s missing.";
+export const alt = "FNDRS Society — From a profile to a co-founder";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function OpengraphImage() {
   return renderOgImage({
-    eyebrow: "Private beta",
-    title: "Find what’s missing.",
-    subtitle: "Co-founders, skills, projects and the people who move an idea forward.",
+    eyebrow: "How it works",
+    title: "From a profile to a co-founder",
+    subtitle: "Five steps, no pitch deck and no waiting for an introduction.",
   });
 }

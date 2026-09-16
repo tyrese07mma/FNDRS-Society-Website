@@ -9,12 +9,12 @@ export type Audience = {
 export const audiences: Audience[] = [
   {
     title: "Founders",
-    body: "You're building and something is missing — a co-founder, a first hire, a specialist for one hard problem.",
+    body: "You’re building and something is missing — a co-founder, a first hire, a specialist for one hard problem.",
     icon: "rocket",
   },
   {
     title: "Future founders",
-    body: "You have the idea and the appetite. You're looking for the people who make it real.",
+    body: "You have the idea and the appetite. You’re looking for the people who make it real.",
     icon: "zap",
   },
   {
@@ -29,12 +29,12 @@ export const audiences: Audience[] = [
   },
   {
     title: "Marketers & growth",
-    body: "You know how to find the first thousand users. You're looking for something worth putting them onto.",
+    body: "You know how to find the first thousand users. You’re looking for something worth putting them onto.",
     icon: "megaphone",
   },
   {
     title: "Operators & experts",
-    body: "You've done the hard part before. You want to do it again — as a co-founder, an advisor, or a mentor.",
+    body: "You’ve done the hard part before. You want to do it again — as a co-founder, an advisor, or a mentor.",
     icon: "graduationCap",
   },
 ];

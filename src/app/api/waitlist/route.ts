@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   const email = clean(payload.email).toLowerCase();
   if (!isValidEmail(email)) {
     return NextResponse.json(
-      { ok: false, code: "invalid_email", message: "That email address doesn't look right." },
+      { ok: false, code: "invalid_email", message: "That email address doesn’t look right." },
       { status: 400 },
     );
   }
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         code: "not_configured",
-        message: "The waitlist isn't connected yet.",
+        message: "The waitlist isn’t connected yet.",
       },
       { status: 503 },
     );
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, code: "duplicate" });
     case "not_configured":
       return NextResponse.json(
-        { ok: false, code: "not_configured", message: "The waitlist isn't connected yet." },
+        { ok: false, code: "not_configured", message: "The waitlist isn’t connected yet." },
         { status: 503 },
       );
     default:

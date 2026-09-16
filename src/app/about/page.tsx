@@ -42,9 +42,10 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
+        index="/about"
         eyebrow="About"
         title={<>A network for the thing you can&rsquo;t do alone</>}
-        lead="FNDRS Society connects founders, builders and experts around one question: what's missing right now? A co-founder, a skill, a project worth joining, or one problem nobody in the room has solved before."
+        lead="FNDRS Society connects founders, builders and experts around one question: what’s missing right now? A co-founder, a skill, a project worth joining, or one problem nobody in the room has solved before."
       />
 
       <Section spacing="tight">
@@ -82,6 +83,7 @@ export default function AboutPage() {
 
       <Section id="principles" className="border-y border-line bg-band">
         <SectionHeading
+          index="01"
           eyebrow="How we build it"
           title="Four decisions that shape the product"
           lead="Not a manifesto — just the trade-offs we keep making, and what they cost."
@@ -102,8 +104,8 @@ export default function AboutPage() {
       <ComparisonSection />
       <AudienceSection />
       <CtaBand
-        title="Built for what's next."
-        lead="FNDRS Society is in private beta. Get on the list and we'll tell you when your spot opens."
+        title="Built for what’s next."
+        lead="FNDRS Society is in private beta. Get on the list and we’ll tell you when your spot opens."
       />
     </>
   );

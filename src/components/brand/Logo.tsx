@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 
 /**
  * The FNDRS wordmark: wide-tracked uppercase, light weight, with the optional
- * SOCIETY line beneath it — matching the lockup on the app's onboarding screen.
+ * SOCIETY line beneath it — matching the lockup on the app’s onboarding screen.
  */
 export function Logo({
   withSociety = false,

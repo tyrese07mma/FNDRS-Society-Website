@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import { Icon, type IconName } from "./Icon";
 
 /**
- * The app's card: near-black surface, hairline border, 22px radius. The `gold`
+ * The app’s card: near-black surface, hairline border, 22px radius. The `gold`
  * tone mirrors the highlighted cards (Smart Match, FNDRS Pro) in the product.
  */
 export function Card({
@@ -11,11 +11,14 @@ export function Card({
   className,
   tone = "default",
   interactive = false,
+  spotlight = false,
 }: {
   children: ReactNode;
   className?: string;
   tone?: "default" | "gold" | "bare";
   interactive?: boolean;
+  /** Adds the cursor-follow highlight; needs a SpotlightGroup ancestor. */
+  spotlight?: boolean;
 }) {
   return (
     <div
@@ -26,7 +29,8 @@ export function Card({
           "border border-gold/35 bg-[linear-gradient(150deg,rgba(187,156,99,0.13),rgba(19,19,23,0.9)_58%)]",
         tone === "bare" && "border border-transparent",
         interactive &&
-          "transition-[border-color,background-color,transform] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:border-line-strong hover:bg-surface-2",
+          "transition-[border-color,background-color,transform] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:border-line-strong hover:bg-surface-2",
+        spotlight && "spotlight",
         className,
       )}
     >
@@ -63,7 +67,7 @@ export function IconTile({
   );
 }
 
-/** Small pill label, as used on the app's onboarding card. */
+/** Small pill label, as used on the app’s onboarding card. */
 export function Chip({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <span

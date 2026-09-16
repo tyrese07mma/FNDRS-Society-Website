@@ -15,15 +15,15 @@ export const coreFeatures: Feature[] = [
     title: "Smart Match",
     summary: "Ranked matches, not an endless directory.",
     detail:
-      "Matching reads what you're building, the stage you're at, the skills you bring and the ones you're missing, then scores the people worth your attention. You review a shortlist and decide — skip, save, or reach out.",
+      "Matching reads what you’re building, the stage you’re at, the skills you bring and the ones you’re missing, then scores the people worth your attention. You review a shortlist and decide — skip, save, or reach out.",
     icon: "sparkles",
   },
   {
     id: "profiles",
     title: "Founder profiles",
-    summary: "What you're building and what you need, in one place.",
+    summary: "What you’re building and what you need, in one place.",
     detail:
-      "A profile built for collaboration rather than recruitment: your project, your stack, your strengths, your interests, and the role or skill set you're actively looking for.",
+      "A profile built for collaboration rather than recruitment: your project, your stack, your strengths, your interests, and the role or skill set you’re actively looking for.",
     icon: "userCheck",
   },
   {
@@ -39,13 +39,13 @@ export const coreFeatures: Feature[] = [
     title: "Problems worth solving",
     summary: "Post the blocker. Find the person who has solved it.",
     detail:
-      "Not every gap is a hire. Sometimes it's one specific problem — pricing, infrastructure, a stalled launch. Put it in front of people who have already been through it.",
+      "Not every gap is a hire. Sometimes it’s one specific problem — pricing, infrastructure, a stalled launch. Put it in front of people who have already been through it.",
     icon: "lifebuoy",
   },
   {
     id: "startups",
     title: "Startups & projects",
-    summary: "See what's actually being built.",
+    summary: "See what’s actually being built.",
     detail:
       "Launches, side projects and early companies from across the network. Follow the ones you care about, or find the one you want to help build.",
     icon: "rocket",
@@ -65,8 +65,8 @@ export const networkFeatures: Feature[] = [
   {
     id: "communities",
     title: "Communities",
-    summary: "Topic-based rooms — AI, fintech, design, whatever you're deep in.",
-    detail: "Topic-based rooms — AI, fintech, design, whatever you're deep in.",
+    summary: "Topic-based rooms — AI, fintech, design, whatever you’re deep in.",
+    detail: "Topic-based rooms — AI, fintech, design, whatever you’re deep in.",
     icon: "users",
   },
   {
@@ -109,7 +109,7 @@ export const networkFeatures: Feature[] = [
 export const copilot: Feature = {
   id: "copilot",
   title: "FNDRS Copilot",
-  summary: "An AI layer that knows what you're building.",
+  summary: "An AI layer that knows what you’re building.",
   detail:
     "Pitch feedback, outreach drafts and hiring plans, written against your actual profile and project rather than a generic prompt. It suggests who to talk to next and why.",
   icon: "bot",

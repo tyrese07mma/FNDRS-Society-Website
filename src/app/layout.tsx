@@ -2,14 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/analytics/Analytics";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { inter, interTight } from "@/lib/fonts";
+import { ScrollFX } from "@/components/ui/ScrollFX";
+import { geistMono, inter, interTight } from "@/lib/fonts";
 import { noIndex, seoKeywords, siteConfig } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Find what's missing`,
+    default: `${siteConfig.name} — Find what’s missing`,
     template: `%s — ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -22,14 +23,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — Find what's missing`,
+    title: `${siteConfig.name} — Find what’s missing`,
     description: siteConfig.shortDescription,
     url: siteConfig.url,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — Find what's missing`,
+    title: `${siteConfig.name} — Find what’s missing`,
     description: siteConfig.shortDescription,
   },
   robots: noIndex
@@ -61,6 +62,26 @@ const organizationSchema = {
   description: siteConfig.longDescription,
 };
 
+/*
+ * Availability is PreOrder rather than InStock: the product is not released,
+ * and a waitlist is exactly what PreOrder describes.
+ */
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: siteConfig.name,
+  applicationCategory: "BusinessApplication",
+  url: siteConfig.url,
+  description: siteConfig.longDescription,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/PreOrder",
+    description: "Free during the private beta",
+  },
+};
+
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -71,7 +92,7 @@ const websiteSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${interTight.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${interTight.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="min-h-dvh antialiased">
         {/*
           Runs before the body paints. Scroll reveals are scoped to `.js`, so
@@ -87,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
 
+        <ScrollFX />
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
@@ -100,6 +122,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
         />
         <Analytics />
       </body>

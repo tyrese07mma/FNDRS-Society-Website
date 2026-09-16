@@ -18,7 +18,7 @@ import { faqs } from "@/content/faq";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} — Find what's missing`,
+  title: `${siteConfig.name} — Find what’s missing`,
   description: siteConfig.description,
   alternates: { canonical: "/" },
 };
@@ -36,20 +36,20 @@ export default function HomePage() {
       <BetaSection />
 
       <Section id="faq" className="border-t border-line bg-band">
-        <SectionHeading eyebrow="FAQ" title="Questions people ask before joining" />
-        <div className="mt-12">
+        <SectionHeading index="08" eyebrow="FAQ" title="Questions people ask before joining" />
+        <div className="mt-14">
           <FaqAccordion items={faqs.slice(0, 6)} />
         </div>
         <Reveal delay={80}>
           <Link
             href="/faq"
-            className="group mt-8 inline-flex items-center gap-2 text-[0.9375rem] text-cream transition-colors hover:text-gold-light"
+            className="group mt-10 inline-flex items-center gap-2 text-[0.9375rem] text-cream transition-colors hover:text-gold-light"
           >
             All questions
             <Icon
               name="arrowRight"
               size={16}
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
+              className="transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:translate-x-1"
             />
           </Link>
         </Reveal>

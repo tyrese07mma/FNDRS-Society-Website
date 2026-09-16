@@ -10,8 +10,8 @@ export const siteConfig = {
   shortName: "FNDRS",
   /** Override with NEXT_PUBLIC_SITE_URL once the production domain is live. */
   url: (rawUrl && rawUrl.replace(/\/$/, "")) || "https://fndrs-society.com",
-  tagline: "Find what's missing.",
-  /** Meta description — kept under 160 characters so search results don't truncate it. */
+  tagline: "Find what’s missing.",
+  /** Meta description — kept under 160 characters so search results don’t truncate it. */
   description:
     "A matching platform for founders and builders. Find a co-founder, the skill your team is missing, or a project worth joining.",
   /** Used for OpenGraph and social cards, where a little more room is fine. */

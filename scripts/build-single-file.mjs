@@ -59,9 +59,11 @@ css = css.replace(/@font-face\s*\{[^}]*url\(\/fonts\/[^)]*\)[^}]*\}/g, "");
 css = css.replace(/,\s*"Inter Tight Ext"/g, "").replace(/,\s*"Inter Ext"/g, "");
 
 // Point the remaining two faces at embedded bytes.
-css = css.replace(/url\(\.\.\/media\/([^)]+\.woff2)\)/g, (_, name) =>
-  `url(${dataUri(join("_next", "static", "media", name), "font/woff2")})`,
-);
+let embeddedFonts = 0;
+css = css.replace(/url\(\.\.\/media\/([^)]+\.woff2)\)/g, (_, name) => {
+  embeddedFonts += 1;
+  return `url(${dataUri(join("_next", "static", "media", name), "font/woff2")})`;
+});
 
 // ── Page bodies ─────────────────────────────────────────────────────────────
 const first = readFileSync(join(outDir, ROUTES[0].file), "utf8");
@@ -128,6 +130,44 @@ const boot = `
     var src = IMAGES[img.getAttribute("data-src")];
     if (src) img.src = src;
   });
+
+  // ── Hero headline ─────────────────────────────────────────────────────────
+  // The words are hidden until an ancestor carries \`split-ready\`, which React
+  // normally adds. Next frame, so the transition has a start value.
+  requestAnimationFrame(function () {
+    document.body.classList.add("split-ready");
+  });
+
+  // ── Reading progress and parallax ─────────────────────────────────────────
+  (function () {
+    var root = document.documentElement;
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var layers = reduced ? [] : Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
+    var frame = 0;
+
+    function update() {
+      frame = 0;
+      var max = root.scrollHeight - window.innerHeight;
+      root.style.setProperty("--scroll-progress", max > 8 ? String(Math.min(1, window.scrollY / max)) : "0");
+
+      var viewport = window.innerHeight;
+      for (var i = 0; i < layers.length; i++) {
+        var rect = layers[i].getBoundingClientRect();
+        if (rect.bottom < -viewport || rect.top > viewport * 2) continue;
+        var strength = Number(layers[i].dataset.parallax) || 0;
+        var offset = (viewport / 2 - (rect.top + rect.height / 2)) / viewport;
+        layers[i].style.setProperty("--parallax-y", (offset * strength).toFixed(2) + "px");
+      }
+    }
+
+    function schedule() {
+      if (!frame) frame = requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+  })();
 
   // ── Scroll reveals ────────────────────────────────────────────────────────
   // The stylesheet hides these while the \`js\` class is present, so if anything
@@ -216,6 +256,7 @@ const boot = `
     closers.forEach(function (close) { close(); });
     document.body.style.overflow = "";
     window.scrollTo(0, 0);
+    document.documentElement.style.setProperty("--scroll-progress", "0");
   }
 
   function fromHash() {
@@ -330,4 +371,6 @@ mkdirSync(join(root, "dist"), { recursive: true });
 writeFileSync(target, html);
 
 console.log(`Single file: dist/index.html  (${(statSync(target).size / 1024 / 1024).toFixed(2)} MB)`);
-console.log(`${ROUTES.length} routes, ${imageMap.size} embedded screenshots, 2 embedded fonts, 0 external requests`);
+console.log(
+  `${ROUTES.length} routes, ${imageMap.size} embedded screenshots, ${embeddedFonts} embedded fonts, 0 external requests`,
+);

@@ -10,9 +10,10 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[transform,background-color,border-color,color,box-shadow] duration-200 ease-[var(--ease-out-soft)] active:translate-y-px disabled:pointer-events-none disabled:opacity-55 whitespace-nowrap";
 
 const variants: Record<Variant, string> = {
-  // The app's primary action: solid cream pill on near-black.
-  primary: "bg-cream text-ink hover:bg-white shadow-[0_1px_0_rgba(255,255,255,0.35)_inset]",
-  secondary: "border border-line-strong bg-surface/70 text-cream hover:border-gold/45 hover:bg-surface-2",
+  // The app’s primary action: solid cream pill on near-black.
+  primary: "sheen bg-cream text-ink hover:bg-white shadow-[0_1px_0_rgba(255,255,255,0.35)_inset]",
+  secondary:
+    "border border-line-strong bg-surface/70 text-cream hover:border-gold/45 hover:bg-surface-2 hover:shadow-[0_0_0_1px_color-mix(in_oklab,var(--color-gold)_18%,transparent)]",
   ghost: "text-cream/85 hover:text-cream hover:bg-surface",
   gold: "border border-gold/40 bg-gold-deep/60 text-gold-light hover:border-gold/70 hover:bg-gold-deep",
 };

@@ -8,12 +8,12 @@ export const steps: Step[] = [
   {
     number: "01",
     title: "Build your profile",
-    body: "What you're building, what you're good at, and where you are. Five minutes, no résumé.",
+    body: "What you’re building, what you’re good at, and where you are. Five minutes, no résumé.",
   },
   {
     number: "02",
-    title: "Name what's missing",
-    body: "A co-founder, a specific skill, a first hire, or one problem you can't get past. Say it plainly.",
+    title: "Name what’s missing",
+    body: "A co-founder, a specific skill, a first hire, or one problem you can’t get past. Say it plainly.",
   },
   {
     number: "03",

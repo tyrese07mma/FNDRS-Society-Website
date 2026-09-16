@@ -16,9 +16,9 @@ app cannot be affected by changes made in this repo.
 | Framework  | Next.js 16 (App Router, React 19, Turbopack)                 |
 | Language   | TypeScript, `strict` + `noUncheckedIndexedAccess`            |
 | Styling    | Tailwind CSS v4 with design tokens in `src/app/globals.css`  |
-| Fonts      | Inter and Inter Tight, self-hosted via `next/font/local`      |
+| Fonts      | Inter, Inter Tight and Geist Mono, self-hosted via `next/font/local` |
 | Icons      | Hand-rolled inline SVGs (`src/components/ui/Icon.tsx`)       |
-| Animation  | CSS transitions driven by one `IntersectionObserver`          |
+| Animation  | CSS transitions; one `IntersectionObserver` and one rAF scroll loop |
 
 Runtime dependencies: `next`, `react`, `react-dom`. That is the whole list — no
 UI kit, no animation library, no icon package, no Supabase client.
@@ -57,7 +57,8 @@ npm run check         # typecheck + lint + build
 | `/terms`           | Terms of service — **draft, needs review**                             |
 | `/imprint`         | Imprint — **placeholders only, must be filled in**                     |
 | `/api/waitlist`    | `POST` endpoint behind the early access form                           |
-| `/sitemap.xml`, `/robots.txt`, `/opengraph-image`, `/twitter-image`, `/icon.svg`, `/apple-icon.png` | Generated |
+| `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest`, `/icon.svg`, `/apple-icon.png` | Generated |
+| `/opengraph-image`, `/twitter-image` | Social cards — the home card plus one per marketing page, from the shared template in `src/lib/og.tsx` |
 
 ## Project layout
 
@@ -101,7 +102,30 @@ one brand. Tokens are defined once in `src/app/globals.css`:
 | `--color-olive`              | `#585945` | Secondary accent, from the app avatars |
 | `--color-coral`              | `#e0705f` | Errors, mirroring the app's skip action|
 
-Radii, easing and breakpoints are tokens too (`--radius-card`, `--ease-out-soft`).
+Radii, easing and breakpoints are tokens too (`--radius-card`, `--ease-out-soft`,
+`--ease-out-expo`).
+
+Three type roles carry the design: **Inter Tight** for display, **Inter** for
+running text, and **Geist Mono** for anything that reads as data — section
+indices, labels, captions. The `.label` utility sets that last role in one place.
+
+### Motion
+
+Every effect is CSS; JavaScript only supplies the trigger, and all of it is
+disabled under `prefers-reduced-motion`.
+
+| Piece | Where | Cost |
+| ----- | ----- | ---- |
+| Scroll reveals | `Reveal` | one `IntersectionObserver` per instance, disconnected after firing |
+| Hero headline | `SplitText` | none — words carry staggered CSS delays |
+| Reading progress, parallax | `ScrollFX` | one passive scroll listener, one rAF tick for the page |
+| Cursor-follow card highlight | `SpotlightGroup` + `.spotlight` | one `pointermove` per grid, mouse only |
+| Role ticker | `Marquee` | pure CSS keyframes, pauses on hover |
+| Button sheen, nav underline, row rules | `.sheen`, `.link-sweep`, utility classes | pure CSS |
+
+Nothing is parked at `opacity: 0` waiting on script that might not run: the
+hidden states live behind a `js` class that an inline script sets before the
+body paints, so without JavaScript the page renders complete.
 
 ## App screenshots
 
